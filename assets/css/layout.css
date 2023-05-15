@@ -5,5 +5,7 @@ body {
 }
 
 body #layout-main {
+  margin-bottom: 35%;
   height: 100%;
+  background-color: violet;
 }

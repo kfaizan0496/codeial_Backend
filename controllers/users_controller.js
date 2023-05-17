@@ -1,10 +1,44 @@
 const User=require('../models/user');
 
-module.exports.profile=function(req,res){
-   return  res.render('user_profile',{
+module.exports.profile=async function(req,res){
+ try{
+     const user=await User.findById(req.params.id);
+     return  res.render('user_profile',{
           title:"profile",
+          profile_user:user,
      });
+
+ }catch(err){
+     console.log('Error in rendering profile user: ', err);
+
+ }
+  
 },
+
+
+// updating the user info....
+module.exports.update=async function(req,res){
+     try{
+          if(req.user.id==req.params.id){
+               const user=await User.findByIdAndUpdate(req.params.id,req.body);
+               if(user){
+                    console.log("updating a user")
+                 
+               }
+               return res.redirect('back');
+     
+          }else{
+               console.log("Error in updating a user")
+     
+               res.status(401).send('unAuthorize')
+          }
+     }catch(err){
+          console.log("Error in updating a user")
+          return res.redirect('back');
+
+     }
+   
+}
 
 
 

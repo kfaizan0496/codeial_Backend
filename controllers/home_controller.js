@@ -1,4 +1,5 @@
 const  Post=require('../models/post');
+const Comment=require('../models/comment');
 
 module.exports.home=  async function(req,res){
 // return res.end('<h1>Express is Up for codeial!!</h1>')
@@ -30,12 +31,22 @@ module.exports.home=  async function(req,res){
 // populate the user of each post...
 
 try{
-    const posts=await Post.find({}).populate('user');
+  
+    const posts=await Post.find({})
+    .populate('user')
+    .populate({
+        path:'comments',
+        populate:{
+            path:'user'
+        }
+    });
     if(posts){
-        console.log('Post:',posts)
+        // console.log('Post:',posts)
        return res.render('home',{
            title:"home",
-           posts:posts
+           posts:posts,
+     
+        
        
        })
      

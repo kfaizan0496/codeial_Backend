@@ -1,4 +1,6 @@
 const User=require('../models/user');
+const fs= require('fs');
+const path=require('path');
 
 module.exports.profile=async function(req,res){
  try{
@@ -21,6 +23,27 @@ module.exports.update=async function(req,res){
      try{
           if(req.user.id==req.params.id){
                const user=await User.findByIdAndUpdate(req.params.id,req.body);
+               User.uploadedAvatar(req,res,function(err){
+                    if(err){
+                         console.log('***Multer Error:',err);
+
+                    }
+                    console.log(req.file);
+                    user.name=req.body.name;
+                    // user.email=req.body.email;
+                    if(req.file){
+                         if(user.avatar){
+                              fs.unlinkSync(path.join(__dirname,'..',user.avatar));
+                         }
+
+                         // this is the saving the path of the uploaded file into the 
+                         // avatar field in the user...
+                         user.avatar=User.avatarPath+'/'+req.file.filename;
+
+                    }
+                    user.save();
+
+               })
                if(user){
                     console.log("updating a user")
                  
@@ -92,9 +115,18 @@ module.exports.create = async function(req, res) {
 
 
 // sign in and create session for the session
-module.exports.createSession=function(req,res){
-     //Todo Later
-     return res.redirect('/');
+module.exports.createSession=async function(req,res){
+     try{
+          req.flash('success','Logged In Successfully');
+          //Todo Later
+          return res.redirect('/');
+     }catch(err){
+          req.flash('error','invalid username/Password');
+
+          return res.redirect('back');
+
+     }
+    
 }
 
 
@@ -102,8 +134,13 @@ module.exports.createSession=function(req,res){
 // logout
 
 module.exports.destroySession=function(req,res){
+     
      req.logout(function(err) {
+
           if (err) { return next(err); }
+     req.flash('success','You have Logged Out');
+     return res.redirect('back');
      })
-         return res.redirect('/');
+
+    
 }

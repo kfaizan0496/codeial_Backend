@@ -56,7 +56,7 @@ module.exports.update=async function(req,res){
                res.status(401).send('unAuthorize')
           }
      }catch(err){
-          console.log("Error in updating a user")
+          console.log("Error in updating a user",err)
           return res.redirect('back');
 
      }

@@ -10,7 +10,7 @@ passport.use(new LocalStrategy({
  async function( req,email,password,done){
    const user=await User.findOne({email:email});
     if(!user){
-        req.flash('error',eror)
+        req.flash('error',err)
         console.log('Erron in Finding user---->passport');
         return done(err);
     }

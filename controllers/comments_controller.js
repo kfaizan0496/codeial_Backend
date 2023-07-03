@@ -1,29 +1,56 @@
 const Comment=require('../models/comment');
 const Post=require('../models/post');
+const commentsMailer=require('../mailers/comment_mailer');
+const commentEmailWorker=require('../workers/comment_email_worker');
+const queue=require('../config/kue');
 
 
-module.exports.create=async function(req,res){
+
+
+
+module.exports.create =  async function(req , res){
     try{
-         const post=await Post.findById(req.body.post);
-            if(post){
-                const comment=await Comment.create({
-                 content:req.body.content,
-                 post:req.body.post,
-                 user:req.user._id,
-        
-                  })
-                    if(comment){
-                    post.comments.push(comment);
-                    post.save();
-                   return res.redirect('/');
+      let post = await Post.findById(req.body.post);
+  
+      if (post){
+          let comment = await Comment.create({
+              content: req.body.content,
+              post: req.body.post,
+              user: req.user._id
+          });
+  
+          post.comments.push(comment);
+          post.save();
+          
+          comment = await comment.populate('user', 'name email');
+        //   commentsMailer.newComment(comment);
+           let job= queue.create('emails',comment).save(function(err){
+            if(err){
+                console.log("Error in creating Queue",err);
             }
+              console.log("job Enqueued :",job.id)
+           })  
+       
+          if (req.xhr){
+            
 
+            return res.status(200).json({
+                data: {
+                    comment: comment
+                },
+                message: "Post created!"
+            });
         }
-    return res.redirect('/');
-    }catch(err){
-        console.log('Error in creating comments: ', err);
-        return res.redirect('/');
+
+        req.flash('success', 'Comment published!');
+
+        res.redirect('/');
     }
+}catch(err){
+    req.flash('error', err);
+    return;
+}
+
 }
 
 

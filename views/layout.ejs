@@ -15,9 +15,13 @@
 
   "></script>
 
-    <link rel="stylesheet" href="/css/layout.css">
+    <!-- <link rel="stylesheet" href="/css/layout.css">
     <link rel="stylesheet" href="/css/header.css">
-    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/footer.css"> -->
+
+    <link rel="stylesheet" href="<%= assetPath('/css/layout.css') %>">
+    <link rel="stylesheet" href="<%= assetPath('css/header.css') %>">
+    <link rel="stylesheet" href="<%= assetPath('css/footer.css') %>">
 
     <%- style %>
 
@@ -33,6 +37,7 @@
 
     <main id="layout-main">
         <%- body%>
+   
     </main>
   
  
@@ -42,7 +47,7 @@
      <%- script %>
 
      <script>
-        <%if(flash.success && flash.success.length>0){%>
+        <% if(flash.success && flash.success.length>0){ %>
 
             new Noty({
              theme:'relax',
@@ -54,9 +59,9 @@
           }).show()
 
 
-     <%}%>
+     <%} %>
 
-     <%if(flash.error && flash.error.length>0){%>
+     <% if(flash.error && flash.error.length>0){ %>
 
  new Noty({
    theme:'relax',
@@ -68,7 +73,7 @@
 }).show()
 
 
-<%}%>
+<%} %>
 
      </script>
 

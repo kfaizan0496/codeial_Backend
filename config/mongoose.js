@@ -13,11 +13,16 @@
 
 // above code is not working....
 
-
+const env=require('./enviroment');
 
 const mongoose = require("mongoose");
 mongoose.set('strictQuery', false);
-const mongoDB = "mongodb://127.0.0.1/codeial_development"; 
+// const mongoDB = "mongodb://127.0.0.1/codeial_development"; 
+
+  //CHANGE::for production
+
+const mongoDB = `mongodb://127.0.0.1/${env.db}`; 
+
 const db=main().catch(err => console.log(err));
 async function main() {
   await   mongoose.connect(mongoDB);

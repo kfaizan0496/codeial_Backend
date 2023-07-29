@@ -1,9 +1,15 @@
+const dotenv = require('dotenv').config({path: './config.env'})
 const express=require('express');
+const logger=require('morgan');
 
 const cookieParser=require('cookie-parser');
 
 const app=express();
+require('./config/view-helpers')(app);
+
 const port=8000;
+// changing for production
+const env=require('./config/enviroment');
 app.use(express.urlencoded());
 // used for session cookie and authentication
  const db=require('./config/mongoose');
@@ -24,6 +30,9 @@ var store=new MongoStore({
 // const sassMiddleware=require('node-sass-middleware');
 const flash=require('connect-flash');
 const customMware=require('./config/middleware');
+
+app.use(logger(env.morgan.mode,env.morgan.options));
+// if(env.name=='development'){
 // app.use(sassMiddleware({
 //     src:'./assets/scss',
 //     dest:'./assets/css',
@@ -31,11 +40,20 @@ const customMware=require('./config/middleware');
 //     outputStyle:'expanded',
 //     prefix:'/css',
 // }))
+// }
+
+
+const chatServer=require('http').Server(app);
+const chatSockets=require('./config/chat_sockets').chatSockets(chatServer);
+chatServer.listen(5000);
+console.log("chat Server is listening on port number 5000");
 
 //setting up the layouts
 const expressLayouts=require('express-ejs-layouts');
 app.use(cookieParser());
-app.use(express.static('./assets'));
+// app.use(express.static('./assets'));
+app.use(express.static(env.asset_path));
+
 
 // make the uploads path available for the browser...
 app.use('/uploads',express.static(__dirname+'/uploads'));
@@ -57,7 +75,9 @@ app.set('views','./views');
 
 app.use(session({
     name:'codeial',
-    secret:'blahsomething',
+    // secret:'blahsomething',
+    secret:env.session_cookie_key,
+
     saveUninitialized:false,
     resave:false,
     cookie:{

@@ -5,6 +5,23 @@
     </small>
     <% }%>
     <p><%=post.content  %> &nbsp &nbsp <%=post.user.name%> </p>
+     <br>
+
+     <!-- study about the data  attribute -->
+     <!-- change::display the likes of this post if user logged in then 
+    show toggle likes button else show only counts -->
+   <small>
+     <% if(locals.user){%>
+        <a class="toggle-like-button"  data-likes="<%=post.likes.length%>" 
+            href="/likes/toggle/?id=<%=post._id%>&type=Post">
+            <%=post.likes.length%> Likes</a>
+
+        <%}else{%>
+            <%=post.likes.length%> Likes
+            <%}%>
+   </small>
+
+
     <div class="post-comments">
         <%if(locals.user){%> 
          <form action="/comments/create" method="POST">

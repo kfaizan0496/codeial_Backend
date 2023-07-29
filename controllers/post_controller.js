@@ -1,5 +1,6 @@
 const Post=require('../models/post');
 const Comment =require('../models/comment');
+const Like =require('../models/like');
 
 module.exports.create=async function(req,res){
   try{
@@ -36,8 +37,13 @@ try{
   console.log("posts",post);
   // note:--> .id means it is automatically converted objectId to  String 
  if(post.user==req.user.id){
-
-    //  post.remove();
+     //Change:: delete the associated likes for post and all its comments likes too
+      await Like.deleteMany({likeable:post,onModel:'Post'});
+      await Like.deleteMany({_id: {$in:post.comments}})
+    
+    
+    
+     //  post.remove();
     await post.deleteOne({_id:req.params.id})
   
 

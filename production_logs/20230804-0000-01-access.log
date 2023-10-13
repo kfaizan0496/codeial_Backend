@@ -1,0 +1,11 @@
+[0mGET /css/layout.css [36m304[0m 127.509 ms - -[0m
+[0mGET /css/header.css [36m304[0m 153.233 ms - -[0m
+[0mGET /css/footer.css [36m304[0m 153.699 ms - -[0m
+[0mGET /css/home.css [36m304[0m 160.496 ms - -[0m
+[0mGET /css/chat_box.css [36m304[0m 35.036 ms - -[0m
+[0mGET /js/home_post_comments.js [36m304[0m 21.021 ms - -[0m
+[0mGET /js/home_posts.js [36m304[0m 21.691 ms - -[0m
+[0mGET /js/toggle_likes.js [36m304[0m 19.751 ms - -[0m
+[0mGET /js/chat_engine.js [36m304[0m 5.680 ms - -[0m
+[0mGET / [32m200[0m 1755.320 ms - 3783[0m
+[0mGET /favicon.ico [33m404[0m 116.938 ms - 150[0m

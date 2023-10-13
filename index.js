@@ -7,7 +7,7 @@ const cookieParser=require('cookie-parser');
 const app=express();
 require('./config/view-helpers')(app);
 
-const port=8000;
+const port=process.env.PORT ||8000;
 // changing for production
 const env=require('./config/enviroment');
 app.use(express.urlencoded());
@@ -19,8 +19,10 @@ app.use(express.urlencoded());
  const passportJWT=require('./config/passport-jwt-strategy');
  const passportGoogle=require('./config/passport-google-oauth2-strategy');
  const MongoStore=require('connect-mongodb-session')(session);
+ const url=env.mongo_url;
 var store=new MongoStore({
-    uri: 'mongodb://127.0.0.1/codeial_development',
+    // uri: 'mongodb://127.0.0.1/codeial_development',
+    uri:url,
     collection:'mySessions',
     mongooseConnection:db,
     autoRemove:'disabled',

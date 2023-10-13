@@ -20,13 +20,30 @@ mongoose.set('strictQuery', false);
 // const mongoDB = "mongodb://127.0.0.1/codeial_development"; 
 
   //CHANGE::for production
+  console.log(env.mongo_url);
+  const url=env.mongo_url;
+  mongoose.connect(url,{
+    serverSelectionTimeoutMS: 10000,
+  });
+const db = mongoose.connection;
+  
+// const mongoDB = `mongodb://127.0.0.1/${env.db}`; 
 
-const mongoDB = `mongodb://127.0.0.1/${env.db}`; 
+//  db=main().catch(err => console.log(err));
+// async function main() {
+//   await   mongoose.connect(mongoDB);
+//   console.log(' db is connected');
+// }
 
-const db=main().catch(err => console.log(err));
-async function main() {
-  await   mongoose.connect(mongoDB);
-  console.log(' db is connected');
-}
+// module.exports=db;
 
-module.exports=db;
+
+
+// To Check Error 
+db.on('error', console.error.bind(console, 'Error connecting to the db'));
+
+db.once('open', function () {
+  console.log("Successfully connected to the Database");
+});
+
+module.exports = db;
